@@ -1,0 +1,10 @@
+wget https://s3.cn-north-1.amazonaws.com.cn/private-registory-crt/ca.crt
+cat ca.crt >> /etc/pki/tls/certs/ca-bundle
+mkdir -p /etc/docker/certs.d/hnadockerhub.cloudapp.net/
+cp ca.crt /etc/docker/certs.d/hnadockerhub.cloudapp.net/.
+
+sed -i 's/ExecStart=\/usr\/bin\/docker daemon.*/ExecStart=\/usr\/bin\/docker daemon --insecure-registry hnadockerhub.cloudapp.net -H fd:\/\//g' /usr/lib/systemd/system/docker.service
+
+systemctl daemon-reload
+systemctl restart docker
+
